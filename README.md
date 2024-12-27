@@ -95,7 +95,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - **StatsBomb** for providing open access to football data.
 
 ---
-
-```
-
-```
