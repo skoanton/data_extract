@@ -65,8 +65,6 @@ X,Y,Avslut,Skede,Outcome,Touch,XG
 40,25,Head,Corner,Miss,2,0.05
 ```
 
-```
-
 ## Technologies Used
 
 - **Node.js**: JavaScript runtime.
@@ -97,4 +95,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - **StatsBomb** for providing open access to football data.
 
 ---
+
+```
+
 ```
