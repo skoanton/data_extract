@@ -15,10 +15,9 @@ export const fetchDownloadLinks = async () => {
         let formattedData = [];
         for (const file of jsonFiles) {
             const link = file.download_url;
-            console.log("Fetching data from: ", link);
-            const response = await fetchData(link);
-            const data = response;
-            formattedData = [...formattedData, ...data];
+            console.log("Fetching data from: ", file.name);
+            const data = await fetchData(link);
+            formattedData = formattedData.concat(data);
         }
         createCsv(formattedData);
     } catch (error) {
@@ -30,7 +29,6 @@ export const fetchDownloadLinks = async () => {
 export const fetchData = async (downloadLink) => {
 
     try {
-        console.log("Fetching data from link...");
         const response = await axios.get(downloadLink);
         const data = response.data;
         const formattedData = data

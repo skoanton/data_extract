@@ -7,7 +7,6 @@ export const createCsv = (data) => {
 
     const refinedData = []
     refinedData.push(titleKeys);
-    console.log("Title Keys: ", titleKeys);
 
     data.forEach(item => {
         refinedData.push(Object.values(item));
