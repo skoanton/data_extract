@@ -21,8 +21,8 @@ To run this project, you need:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/shot-data-to-csv.git
-   cd shot-data-to-csv
+   git clone https://github.com/skoanton/data_extract
+   cd data_extract
    ```
 2. Install dependencies:
    ```bash
