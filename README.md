@@ -65,31 +65,7 @@ X,Y,Avslut,Skede,Outcome,Touch,XG
 40,25,Head,Corner,Miss,2,0.05
 ```
 
-## Project Structure
-
 ```
-.
-├── index.js          # Main entry point
-├── utils/
-│   ├── createCsv.js  # Utility for generating CSV files
-│   ├── translate.js  # Translation utilities for shot data
-├── package.json      # Project dependencies and scripts
-└── README.md         # Project documentation
-```
-
-## Key Functions
-
-### `fetchDownloadLinks`
-
-Fetches JSON files from the StatsBomb API, processes the data, and generates the CSV file.
-
-### `fetchData`
-
-Fetches and filters shot data from individual JSON files.
-
-### `createCsv`
-
-Converts formatted data into a CSV file and saves it locally.
 
 ## Technologies Used
 
@@ -108,12 +84,6 @@ Converts formatted data into a CSV file and saves it locally.
 2. **Process Data**: Filters relevant events (shots) and extracts key details like location, shot type, and expected goals.
 3. **Export Data**: Formats the data into a CSV file for analysis.
 
-## Future Improvements
-
-- Add more configurable filtering options for shot data.
-- Allow customization of output CSV file location and format.
-- Implement parallel data fetching with limited concurrency.
-
 ## Contributing
 
 Contributions are welcome! Feel free to open an issue or submit a pull request.
@@ -127,5 +97,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - **StatsBomb** for providing open access to football data.
 
 ---
-
-Feel free to adapt this README to your specific project needs!
+```
