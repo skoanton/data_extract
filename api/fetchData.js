@@ -1,12 +1,37 @@
 import axios from 'axios';
 import { createCsv } from '../utils/createCsv.js';
+import { translateBodyPart, translateShotType, translateOutcome } from '../utils/translate.js';
 
-export const fetchData = async () => {
+
+export const fetchDownloadLinks = async () => {
+    try {
+        console.log("Fetching download links...");
+        const url = "https://api.github.com/repos/statsbomb/open-data/contents/data/events";
+        const response = await axios.get(url);
+        const files = response.data;
+        const jsonFiles = files.filter(file => file.name.endsWith('.json'));
+        console.log('Antal JSON-filer:', jsonFiles.length);
+
+        let formattedData = [];
+        for (const file of jsonFiles) {
+            const link = file.download_url;
+            console.log("Fetching data from: ", link);
+            const response = await fetchData(link);
+            const data = response;
+            formattedData = [...formattedData, ...data];
+        }
+        createCsv(formattedData);
+    } catch (error) {
+        console.log("Error: ", error);
+        console.log("Error fetching data from: ", url);
+    }
+}
+
+export const fetchData = async (downloadLink) => {
 
     try {
-        console.log("Fetching data...");
-        const url = "https://raw.githubusercontent.com/statsbomb/open-data/refs/heads/master/data/events/19717.json";
-        const response = await axios.get(url);
+        console.log("Fetching data from link...");
+        const response = await axios.get(downloadLink);
         const data = response.data;
         const formattedData = data
             .filter(event => 
@@ -22,47 +47,11 @@ export const fetchData = async () => {
                 Touch: event.shot.first_time ? 1 : 2, 
                 XG: event.shot.statsbomb_xg,
             }));
-            createCsv(formattedData);
+            return formattedData;
+            
 
     } catch (error) {
         console.log("Error: ", error);
-        console.log("Error fetching data from: ", url);
+        console.log("Error fetching data from: ", downloadLink);
     }
 }
-
-
-const translateBodyPart = (id) => {
-    const mapping = {
-        37: "Nick",
-        38: "Skott",
-        70: "Övrigt",
-        40: "Skott",
-    };
-    return mapping[id] || "Okänd";
-};
-
-// Funktion för att översätta "Shot Type"
-const translateShotType = (id) => {
-    const mapping = {
-        61: "Hörna",
-        62: "Frispark",
-        87: "Öppet spel",
-        88: "Straff",
-    };
-    return mapping[id] || "Okänt skede";
-};
-
-// Funktion för att översätta "Outcome"
-const translateOutcome = (id) => {
-    const mapping = {
-        96: "Blockad",
-        97: "Mål",
-        98: "Utanför",
-        99: "På mål",
-        100: "På mål",
-        101: "Utanför",
-        115: "På mål",
-        116: "På mål",
-    };
-    return mapping[id] || "Okänt resultat";
-};

@@ -1,5 +1,5 @@
 import http from 'http';
-import { fetchData } from './api/fetchData.js';
+import { fetchData, fetchDownloadLinks } from './api/fetchData.js';
 
 
 const port = 3000;
@@ -15,4 +15,4 @@ server.listen(port, () => {
 });
 
 
-await fetchData();
+await fetchDownloadLinks();

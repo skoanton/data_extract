@@ -17,11 +17,12 @@ export const createCsv = (data) => {
     refinedData.forEach(row => {
         csvContent += row.join(",") + "\n";
     });
+    /* const desktopPath = path.join(os.homedir(), 'Desktop'); 
+    const filePath = path.join(path, 'data.csv');
+    fs.writeFileSync(filePath, csvContent, 'utf8');  */
 
-    console.log("Refined Data: ", refinedData);
-    const desktopPath = path.join(os.homedir(), 'Desktop');
-    const filePath = path.join(desktopPath, 'hoppasduinteharenfilsomhetersahar.csv');
-    fs.writeFileSync(filePath, csvContent, 'utf8'); 
 
+    const filePath = './data.csv';
+    fs.writeFileSync(filePath, csvContent, 'utf8');
     console.log(`CSV-filen har sparats: ${filePath}`);
 }
