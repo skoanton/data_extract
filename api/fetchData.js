@@ -5,6 +5,7 @@ import { combineDuplicates } from '../utils/combine.js';
 import { sortByXY } from '../utils/sort.js';
 
 export const fetchDownloadLinks = async () => {
+    const LIMIT = 0; // 0 = no limit
     try {
         console.log("Fetching download links...");
         const url = "https://api.github.com/repos/statsbomb/open-data/contents/data/events";
@@ -14,16 +15,14 @@ export const fetchDownloadLinks = async () => {
         console.log('Antal JSON-filer:', jsonFiles.length);
 
         let formattedData = [];
-        /* let x = 0;  */ //testing purpose to limit the amount of data fetched
         for (const file of jsonFiles) {
             const link = file.download_url;
             console.log("Fetching data from: ", file.name);
             const data = await fetchData(link);
             formattedData = formattedData.concat(data);
-           /*  if(x === 100) {
+            if (LIMIT !== 0 && formattedData.length >= LIMIT) {
                 break;
             }
-            x++; */ //testing purpose to limit the amount of data fetched
         }
         const newData = combineDuplicates(formattedData);
         const sortedData = sortByXY(newData);
