@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { createCsv } from '../utils/createCsv.js';
 import { translateBodyPart, translateShotType, translateOutcome } from '../utils/translate.js';
-
+import { combineDuplicates } from '../utils/combine.js';
+import { sortByXY } from '../utils/sort.js';
 
 export const fetchDownloadLinks = async () => {
     try {
@@ -13,13 +14,20 @@ export const fetchDownloadLinks = async () => {
         console.log('Antal JSON-filer:', jsonFiles.length);
 
         let formattedData = [];
+        /* let x = 0;  */ //testing purpose to limit the amount of data fetched
         for (const file of jsonFiles) {
             const link = file.download_url;
             console.log("Fetching data from: ", file.name);
             const data = await fetchData(link);
             formattedData = formattedData.concat(data);
+           /*  if(x === 100) {
+                break;
+            }
+            x++; */ //testing purpose to limit the amount of data fetched
         }
-        createCsv(formattedData);
+        const newData = combineDuplicates(formattedData);
+        const sortedData = sortByXY(newData);
+        createCsv(sortedData); 
     } catch (error) {
         console.log("Error: ", error);
         console.log("Error fetching data from: ", url);
@@ -41,7 +49,6 @@ export const fetchData = async (downloadLink) => {
                 Y: event.location[1],
                 Avslut: translateBodyPart(event.shot.body_part.id),
                 Skede: translateShotType(event.shot.type.id), 
-                Outcome: translateOutcome(event.shot.outcome.id), 
                 Touch: event.shot.first_time ? 1 : 2, 
                 XG: event.shot.statsbomb_xg,
             }));
