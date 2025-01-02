@@ -53,16 +53,15 @@ The CSV file includes the following fields:
 - `Y`: Y-coordinate of the shot.
 - `Avslut`: The body part used for the shot.
 - `Skede`: The type of shot (e.g., Corner, Free Kick, Open Play).
-- `Outcome`: The outcome of the shot (e.g., Goal, Miss).
 - `Touch`: Whether it was a first-time shot or not.
 - `XG`: The expected goals value for the shot.
 
 Example CSV:
 
 ```csv
-X,Y,Avslut,Skede,Outcome,Touch,XG
-50,30,Foot,Open Play,Goal,1,0.15
-40,25,Head,Corner,Miss,2,0.05
+X,Y,Avslut,Skede,Touch,XG
+50,30,Foot,Open Play,1,0.15
+40,25,Head,Corner,2,0.05
 ```
 
 ## Technologies Used
@@ -70,7 +69,6 @@ X,Y,Avslut,Skede,Outcome,Touch,XG
 - **Node.js**: JavaScript runtime.
 - **Axios**: For HTTP requests to the API.
 - **fs**: File system module for saving CSV files.
-- **path**: Module for handling file paths.
 
 ## API Reference
 
