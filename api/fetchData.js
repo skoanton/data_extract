@@ -6,7 +6,6 @@ import { sortByXY,removeDecimals } from '../utils/sort.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
 const axiosInstance = axios.create({
     headers: {
         Authorization: `token ${process.env.PERSONAL_GITHUB_TOKEN}`,
@@ -14,25 +13,25 @@ const axiosInstance = axios.create({
 });
 
 export const fetchDownloadLinks = async () => {
-    const LIMIT = 100; // 0 = no limit
+    const LIMIT = 0; // 0 = no limit
+    let progressCounter = 0;
     try {
-        console.log("Fetching download links...");
         const url = "https://api.github.com/repos/statsbomb/open-data/contents/data/events";
         const response = await axiosInstance.get(url);
         const files = response.data;
         const jsonFiles = files.filter(file => file.name.endsWith('.json'));
         console.log('Antal JSON-filer:', jsonFiles.length);
+        const limitedFiles = LIMIT !== 0 ? jsonFiles.slice(0, LIMIT) : jsonFiles;
+        const allData = await Promise.all(
+            limitedFiles.map(async (file) => {
+                const data = await fetchData(file.download_url);
+                progressCounter++;
+                console.log(`Fetched ${progressCounter} / ${limitedFiles.length} files`);
+                return data;
+            })
+        );
 
-        let formattedData = [];
-        for (const file of jsonFiles) {
-            const link = file.download_url;
-            console.log("Fetching data from: ", file.name);
-            const data = await fetchData(link);
-            formattedData = formattedData.concat(data);
-            if (LIMIT !== 0 && formattedData.length >= LIMIT) {
-                break;
-            }
-        }
+        const formattedData = allData.flat();
         const dataWithNoDecimals = removeDecimals(formattedData);
         const newData = combineDuplicates(dataWithNoDecimals);
         const sortedData = sortByXY(newData);
