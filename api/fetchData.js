@@ -3,13 +3,22 @@ import { createCsv } from '../utils/createCsv.js';
 import { translateBodyPart, translateShotType, translateOutcome } from '../utils/translate.js';
 import { combineDuplicates } from '../utils/combine.js';
 import { sortByXY,removeDecimals } from '../utils/sort.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const axiosInstance = axios.create({
+    headers: {
+        Authorization: `token ${process.env.PERSONAL_GITHUB_TOKEN}`,
+    }
+});
 
 export const fetchDownloadLinks = async () => {
-    const LIMIT = 0; // 0 = no limit
+    const LIMIT = 100; // 0 = no limit
     try {
         console.log("Fetching download links...");
         const url = "https://api.github.com/repos/statsbomb/open-data/contents/data/events";
-        const response = await axios.get(url);
+        const response = await axiosInstance.get(url);
         const files = response.data;
         const jsonFiles = files.filter(file => file.name.endsWith('.json'));
         console.log('Antal JSON-filer:', jsonFiles.length);
@@ -37,7 +46,7 @@ export const fetchDownloadLinks = async () => {
 export const fetchData = async (downloadLink) => {
 
     try {
-        const response = await axios.get(downloadLink);
+        const response = await axiosInstance.get(downloadLink);
         const data = response.data;
         const formattedData = data
             .filter(event => 
