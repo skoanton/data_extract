@@ -12,8 +12,6 @@ export const fetchDownloadLinks = async () => {
     let progressCounter = 0;
     try {
 
-        const rateLimitResponse = await axiosInstance.get('https://api.github.com/rate_limit');
-console.log('Rate limit:', rateLimitResponse.data.rate.remaining);
         const url = "https://api.github.com/repos/statsbomb/open-data/contents/data/events";
         const response = await axiosInstance.get(url);
         const files = response.data;
@@ -21,6 +19,7 @@ console.log('Rate limit:', rateLimitResponse.data.rate.remaining);
         console.log('Antal JSON-filer:', jsonFiles.length);
 
         const limitedFiles = LIMIT !== 0 ? jsonFiles.slice(0, LIMIT) : jsonFiles;
+
         const allData = await Promise.all(
             limitedFiles.map(file =>
                 limit(async () => {
@@ -36,19 +35,23 @@ console.log('Rate limit:', rateLimitResponse.data.rate.remaining);
         const dataWithNoDecimals = removeDecimals(formattedData);
         const newData = combineDuplicates(dataWithNoDecimals);
         const sortedData = sortByXY(newData);
+
         createCsv(sortedData); 
+
     } catch (error) {
+
         console.log("Error: ", error);
         console.log("Error fetching data from: ", url);
+
     }
 }
 
 export const fetchData = async (downloadLink) => {
 
     try {
+
         const response = await axiosInstance.get(downloadLink);
-        const data = response.data;
-        const formattedData = data
+        const formattedData = response.data
             .filter(event => 
                 event.shot &&
                 ["Corner", "Free Kick", "Open Play", "Penalty"].includes(event.shot.type.name)
