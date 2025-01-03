@@ -1,6 +1,4 @@
 import fs from 'fs';
-import path from 'path';
-import os from 'os';
 export const createCsv = (data) => {
     console.log("Converting data to CSV...");
     const titleKeys = Object.keys(data[0]);
@@ -16,10 +14,6 @@ export const createCsv = (data) => {
     refinedData.forEach(row => {
         csvContent += row.join(",") + "\n";
     });
-    /* const desktopPath = path.join(os.homedir(), 'Desktop'); 
-    const filePath = path.join(path, 'data.csv');
-    fs.writeFileSync(filePath, csvContent, 'utf8');  */
-
 
     const filePath = './data.csv';
     fs.writeFileSync(filePath, csvContent, 'utf8');

@@ -6,8 +6,6 @@ export const sortByXY = (data) => {
         return a.X - b.X;
     });
 }
-
-
 export const removeDecimals = (data) => {
 
     const roundedCoordinates = data.map(element => ({

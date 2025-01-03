@@ -1,6 +1,5 @@
 import http from 'http';
-import { fetchData, fetchDownloadLinks } from './api/fetchData.js';
-
+import {fetchDownloadLinks } from './api/fetchData.js';
 
 const port = 3000;
 
