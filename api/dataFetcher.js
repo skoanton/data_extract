@@ -1,34 +1,35 @@
-import axios from 'axios';
 import { createCsv } from '../utils/createCsv.js';
-import { translateBodyPart, translateShotType, translateOutcome } from '../utils/translate.js';
+import { translateBodyPart, translateShotType } from '../utils/translate.js';
 import { combineDuplicates } from '../utils/combine.js';
 import { sortByXY,removeDecimals } from '../utils/sort.js';
-import dotenv from 'dotenv';
+import { axiosInstance } from '../utils/httpClient.js';
+import pLimit  from 'p-limit';
 
-dotenv.config();
-const axiosInstance = axios.create({
-    headers: {
-        Authorization: `token ${process.env.PERSONAL_GITHUB_TOKEN}`,
-    }
-});
 
 export const fetchDownloadLinks = async () => {
     const LIMIT = 0; // 0 = no limit
+    const limit = pLimit(10);
     let progressCounter = 0;
     try {
+
+        const rateLimitResponse = await axiosInstance.get('https://api.github.com/rate_limit');
+console.log('Rate limit:', rateLimitResponse.data.rate.remaining);
         const url = "https://api.github.com/repos/statsbomb/open-data/contents/data/events";
         const response = await axiosInstance.get(url);
         const files = response.data;
         const jsonFiles = files.filter(file => file.name.endsWith('.json'));
         console.log('Antal JSON-filer:', jsonFiles.length);
+
         const limitedFiles = LIMIT !== 0 ? jsonFiles.slice(0, LIMIT) : jsonFiles;
         const allData = await Promise.all(
-            limitedFiles.map(async (file) => {
-                const data = await fetchData(file.download_url);
-                progressCounter++;
-                console.log(`Fetched ${progressCounter} / ${limitedFiles.length} files`);
-                return data;
-            })
+            limitedFiles.map(file =>
+                limit(async () => {
+                    const data = await fetchData(file.download_url);
+                    progressCounter++;
+                    console.log(`Fetched ${progressCounter} / ${limitedFiles.length} files`);
+                    return data;
+                })
+            )
         );
 
         const formattedData = allData.flat();

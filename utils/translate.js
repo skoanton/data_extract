@@ -18,7 +18,7 @@ export const translateShotType = (id) => {
     return mapping[id] || "Okänt skede";
 };
 
-export const translateOutcome = (id) => {
+/* export const translateOutcome = (id) => {
     const mapping = {
         96: "Blockad",
         97: "Mål",
@@ -30,4 +30,4 @@ export const translateOutcome = (id) => {
         116: "På mål",
     };
     return mapping[id] || "Okänt resultat";
-};
+}; */
