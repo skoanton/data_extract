@@ -17,6 +17,17 @@ To run this project, you need:
 - [Node.js](https://nodejs.org/) installed on your system.
 - Internet access to fetch data from the API.
 
+### Setting Up the .env File
+
+1. Create a new file in the project root directory named `.env`.
+2. Add your personal GitHub token to the file in the following format:
+
+   ```env
+   PERSONAL_GITHUB_TOKEN="your_token_here"
+   ```
+
+Replace `your_token_here` with your actual GitHub personal access token.
+
 ### Installation
 
 1. Clone the repository:
