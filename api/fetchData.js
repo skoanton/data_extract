@@ -2,7 +2,7 @@ import axios from 'axios';
 import { createCsv } from '../utils/createCsv.js';
 import { translateBodyPart, translateShotType, translateOutcome } from '../utils/translate.js';
 import { combineDuplicates } from '../utils/combine.js';
-import { sortByXY } from '../utils/sort.js';
+import { sortByXY,removeDecimals } from '../utils/sort.js';
 
 export const fetchDownloadLinks = async () => {
     const LIMIT = 0; // 0 = no limit
@@ -24,7 +24,8 @@ export const fetchDownloadLinks = async () => {
                 break;
             }
         }
-        const newData = combineDuplicates(formattedData);
+        const dataWithNoDecimals = removeDecimals(formattedData);
+        const newData = combineDuplicates(dataWithNoDecimals);
         const sortedData = sortByXY(newData);
         createCsv(sortedData); 
     } catch (error) {
