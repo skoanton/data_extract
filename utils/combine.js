@@ -1,31 +1,31 @@
-export const combineDuplicates = (formattedData) => {
-    const matchGroups = new Map();
-    const newXgArray = [];
+export const combineDuplicates = (dataPoints) => {
+    const groupedData = new Map();
+    const combinedData = [];
 
-    formattedData.forEach(data => {
-        const key = `${data.X}-${data.Y}-${data.Avslut}-${data.Skede}-${data.Touch}`;
+    dataPoints.forEach(point => {
+        const key = `${point.X}-${point.Y}-${point.Avslut}-${point.Skede}-${point.Touch}`;
 
-        if (!matchGroups.has(key)) {
-            matchGroups.set(key, []);
+        if (!groupedData.has(key)) {
+            groupedData.set(key, []);
         }
 
-        matchGroups.get(key).push(data);
+        groupedData.get(key).push(point);
 
     });
 
-    matchGroups.forEach(group => {
+    groupedData.forEach(group => {
 
         if (group.length > 1) {
-            const averageXg = group.reduce((sum, item) => sum + item.XG, 0) / group.length;
+            const averageXG = group.reduce((sum, item) => sum + item.XG, 0) / group.length;
 
-            const updatedDuplicate = { ...group[0], XG: averageXg };
-            newXgArray.push(updatedDuplicate);
+            const updatedDuplicate = { ...group[0], XG: averageXG };
+            combinedData.push(updatedDuplicate);
         } else {
-            newXgArray.push(group[0]);
+            combinedData.push(group[0]);
         }
     });
 
     
-    return newXgArray;
+    return combinedData;
 
 }
