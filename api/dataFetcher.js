@@ -31,12 +31,12 @@ export const fetchDownloadLinks = async () => {
             )
         );
 
-        const formattedData = allData.flat();
-        const dataWithNoDecimals = removeDecimals(formattedData);
-        const newData = combineDuplicates(dataWithNoDecimals);
-        const sortedData = sortByXY(newData);
+        const flattenedData  = allData.flat();
+        const roundedData  = removeDecimals(flattenedData);
+        const mergedData  = combineDuplicates(roundedData);
+        const sortedDataByCoordinates  = sortByXY(mergedData);
 
-        createCsv(sortedData); 
+        createCsv(sortedDataByCoordinates);
 
     } catch (error) {
 
