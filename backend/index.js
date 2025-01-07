@@ -1,7 +1,7 @@
 import http from 'http';
 import {fetchDownloadLinks } from './api/dataFetcher.js';
 
-const port = 3000;
+const port = 5000;
 
 
 function startServer() {
