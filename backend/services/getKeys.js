@@ -1,17 +1,26 @@
 
-import { fetchDownloadLinks } from "./getLinks.js";
+import { fetchDownloadLinks,fetchData } from "./getLinks.js";
 import {extractKeys} from "../utils/helpers.js";
 
-export async function fetchKeys(url,isDifferent) {
-    console.log('fetchKeys');
+export async function fetchKeys(url,isDifferent,isMultiple) {
+
+
     try {
-        console.log('getKeys');
-        const data = await fetchDownloadLinks(url,isDifferent);
+        
+        const data = await fetchDownloadLinks(url,isDifferent,isMultiple);
+
         let keys = []
-        for(const d of data){
-            const key = extractKeys(d);
+        if(isMultiple){
+           
+            for(const d of data){
+                const key = extractKeys(d);
+                keys.push(key);
+            }          
+        }
+        else{
+            const key = extractKeys(data[0]);
             keys.push(key);
-        }          
+        }
         const uniqueKeys = [...new Set(keys.flat())];
         return uniqueKeys;
     } catch (error) {

@@ -1,7 +1,7 @@
 import { axiosInstance } from '../utils/httpClient.js';
 import pLimit from 'p-limit';
 
-export async function fetchDownloadLinks(url,isDifferent) {
+export async function fetchDownloadLinks(url,isDifferent,isMultiple) {
     console.log('fetchDownloadLinks');
     
     let fetchLimit = 0; // 0 = no limit
@@ -14,7 +14,15 @@ export async function fetchDownloadLinks(url,isDifferent) {
     console.log('fetchLimit:', fetchLimit);
     try {
 
+        
+        if(!isMultiple){
+            const newUrl = url.replace("https://github.com", "https://raw.githubusercontent.com").replace("/blob", "");
+            console.log(newUrl);
+            const response = await axiosInstance.get(newUrl);
+            return response.data;
+        }
         const response = await axiosInstance.get(url);
+        console.log(response);
         const files = response.data;
         const jsonFiles = files.filter(file => file.name.endsWith('.json'));
         console.log('Antal JSON-filer:', jsonFiles.length);

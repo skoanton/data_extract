@@ -25,7 +25,7 @@ export default function FormInput({}: inputProps) {
 
     if (settings.includeKeys) {
       console.log("Include keys selected");
-      const response = await getKeys(downloadLink, settings.different);
+      const response = await getKeys(downloadLink, settings.different, settings.multipleJSON);
       console.log("Response", response);
     }
 
@@ -33,10 +33,6 @@ export default function FormInput({}: inputProps) {
       console.log("Multiple json selected");
       const response = await fetchDownloadLinks(downloadLink);
       console.log("Response", response);
-
-      if (settings.includeKeys) {
-        console.log("Include keys selected");
-      }
 
       if (settings.different) {
         console.log("Different json selected");
