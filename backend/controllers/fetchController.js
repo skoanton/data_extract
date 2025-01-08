@@ -26,7 +26,7 @@ export const getKeys = async (req, res) => {
     try {
         console.log('getKeys');
         const data = await fetchKeys(url,isDifferent);
-        res.status(200).json(Object.keys(data[0]));
+        res.status(200).json(data);
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
     }

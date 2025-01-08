@@ -1,18 +1,12 @@
-export function get_all_json_keys(json_object, ret_array = []) {
-    for (json_key in json_object) {
-        if (typeof(json_object[json_key]) === 'object' && !Array.isArray(json_object[json_key])) {
-            ret_array.push(json_key);
-            get_all_json_keys(json_object[json_key], ret_array);
-        } else if (Array.isArray(json_object[json_key])) {
-            ret_array.push(json_key);
-            first_element = json_object[json_key][0];
-            if (typeof(first_element) === 'object') {
-                get_all_json_keys(first_element, ret_array);
-            }
-        } else {
-            ret_array.push(json_key);
-        }
+export function extractKeys(obj, prefix = '') {
+    let keys = [];
+    for (const key in obj) {
+      const fullKey = prefix ? `${prefix}.${key}` : key;
+      keys.push(fullKey);
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        // Recurse for nested objects or arrays
+        keys = keys.concat(extractKeys(obj[key], fullKey));
+      }
     }
-
-    return ret_array
-}
+    return keys;
+  }

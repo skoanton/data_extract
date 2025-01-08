@@ -1,16 +1,21 @@
-import { getDownloadLinks } from "../controllers/fetchController.js";
+
 import { fetchDownloadLinks } from "./getLinks.js";
-import { get_all_json_keys } from "../utils/helpers.js";
+import {extractKeys} from "../utils/helpers.js";
+
 export async function fetchKeys(url,isDifferent) {
     console.log('fetchKeys');
     try {
         console.log('getKeys');
         const data = await fetchDownloadLinks(url,isDifferent);
-        console.log(data[0]);
-        let keys = [];
-        console.log(Object.keys(data[0]));
+        let keys = []
+        for(const d of data){
+            const key = extractKeys(d);
+            keys.push(key);
+        }        
         
-        return Object.keys(data[0]);
+        const uniqueKeys = [...new Set(keys.flat())];
+        console.log(uniqueKeys);
+        return uniqueKeys;
     } catch (error) {
         console.log("Error: ", error);
         throw error;
