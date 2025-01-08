@@ -11,10 +11,8 @@ export async function fetchKeys(url,isDifferent) {
         for(const d of data){
             const key = extractKeys(d);
             keys.push(key);
-        }        
-        
+        }          
         const uniqueKeys = [...new Set(keys.flat())];
-        console.log(uniqueKeys);
         return uniqueKeys;
     } catch (error) {
         console.log("Error: ", error);
