@@ -2,15 +2,17 @@ import axios from "axios";
 
 const baseUrl = "http://localhost:5000";
 
-export async function fetchDownloadLinks(url: string) {
+export async function fetchDownloadLinks(url: string, isDifferent: boolean, isMultiple: boolean, keys: string[]) {
   try {
     const response = await axios.get(`${baseUrl}/api/links`, {
       params: {
         url,
+        isDifferent,
+        isMultiple,
+        keys,
       },
     });
-    console.log(response);
-    return response;
+    return response.data;
   } catch (error) {
     console.error(error);
   }
@@ -26,8 +28,9 @@ export async function getKeys(url: string, isDifferent: boolean, isMultiple: boo
       },
     });
     console.log("Keys:", response);
-    return response;
+    return response.data;
   } catch (error) {
     console.error(error);
+    return null;
   }
 }

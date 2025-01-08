@@ -5,12 +5,20 @@ import { Button } from "@nextui-org/button";
 import { FormEvent, useState } from "react";
 import { CheckboxGroup, Checkbox } from "@nextui-org/checkbox";
 import { fetchDownloadLinks, getKeys } from "@/services/dataServices";
+import KeyForm from "./KeyForm";
 type inputProps = {};
 
 export default function FormInput({}: inputProps) {
   const [link, setLink] = useState("");
-
+  const [settings, setSettings] = useState({
+    multipleJSON: false,
+    includeKeys: false,
+    different: false,
+  });
+  const [error, setError] = useState("This field is required");
+  const [isInvalidLinkInput, setIsInvalidLinkInput] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [keys, setKeys] = useState([]);
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -22,35 +30,45 @@ export default function FormInput({}: inputProps) {
       includeKeys: newSettings.includes("includeKeys"),
       different: newSettings.includes("different"),
     };
-
-    if (settings.includeKeys) {
-      console.log("Include keys selected");
-      const response = await getKeys(downloadLink, settings.different, settings.multipleJSON);
-      console.log("Response", response);
+    setSettings(settings);
+    if (!settings.multipleJSON) {
+      if (downloadLink.endsWith(".json")) {
+        console.log("Single json selected");
+      } else {
+        setIsInvalidLinkInput(true);
+        setError("This field should be a json file");
+        setIsInvalidLinkInput(false);
+        return;
+      }
     }
 
-    if (settings.multipleJSON) {
-      console.log("Multiple json selected");
-      const response = await fetchDownloadLinks(downloadLink);
-      console.log("Response", response);
-
-      if (settings.different) {
-        console.log("Different json selected");
+    if (settings.includeKeys) {
+      setIsInvalidLinkInput(false);
+      const keys = await getKeys(downloadLink, settings.different, settings.multipleJSON);
+      if (keys) {
+        setKeys(keys);
+      } else {
+        console.log("Error");
       }
-    } else {
-      console.log("Single json selected");
     }
 
     setLink(downloadLink);
-
     setSubmitted(true);
     console.log("Form submitted");
   };
 
   return (
     <>
-      <Form onSubmit={onSubmit} validationBehavior="native">
-        <Input isRequired errorMessage="This field is required" placeholder="Enter a link" label="Link" name="downloadLink" type="text" />
+      <Form onSubmit={onSubmit} validationBehavior="native" className="mb-4">
+        <Input
+          isInvalid={isInvalidLinkInput}
+          isRequired
+          errorMessage={error}
+          placeholder="Enter a link"
+          label="Link"
+          name="downloadLink"
+          type="text"
+        />
         <CheckboxGroup name="settings" label="Select options">
           <Checkbox value="multipleJSON">Multiple json</Checkbox>
           <Checkbox value="includeKeys">Get json keys</Checkbox>
@@ -58,6 +76,8 @@ export default function FormInput({}: inputProps) {
         </CheckboxGroup>
         <Button type="submit">Submit</Button>
       </Form>
+
+      {submitted && keys.length > 0 && <KeyForm keys={keys} url={link} isMultiple={settings.multipleJSON} isDifferent={settings.different} />}
     </>
   );
 }
