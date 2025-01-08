@@ -66,25 +66,28 @@ export const fetchData = async (downloadLink,keys) => {
     try {
 
         const response = await axiosInstance.get(downloadLink);
-        if(keys){
+        console.log(response.data);
+        if (keys) {
             const getNestedValue = (obj, path) => {
                 return path.split('.').reduce((current, key) => {
                     if (current && current.hasOwnProperty(key)) {
                         return current[key];
                     }
-                    return undefined;
+                    return undefined; 
                 }, obj);
             };
         
-            const newData = keys.reduce((acc, key) => {
-                const value = getNestedValue(response.data[0], key);
-                if (value !== undefined) { 
-                    acc[key] = value;
-                } else {
-                    console.warn(`Key "${key}" does not exist in the object.`);
-                }
-                return acc;
-            }, {});
+            const newData = response.data.map((item) => {
+                return keys.reduce((acc, key) => {
+                    const value = getNestedValue(item, key);
+                    if (value !== undefined) { 
+                        acc[key] = value;
+                    } else {
+                        console.warn(`Key "${key}" does not exist in one of the objects.`);
+                    }
+                    return acc;
+                }, {});
+            });
             return newData;
         }
         return response.data;     
